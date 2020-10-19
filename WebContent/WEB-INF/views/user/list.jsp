@@ -16,7 +16,7 @@
 		
 		//datagrid初始化 
 	    $('#dataList').datagrid({ 
-	        title:'用户列表', 
+	        title:'教师列表', 
 	        iconCls:'icon-more',//图标 
 	        border: true, 
 	        collapsible:false,//是否可折叠的 
