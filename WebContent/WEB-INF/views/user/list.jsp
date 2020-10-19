@@ -3,7 +3,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>用户列表</title>
+	<title>教师列表</title>
 	<link rel="stylesheet" type="text/css" href="../easyui/themes/default/easyui.css">
 	<link rel="stylesheet" type="text/css" href="../easyui/themes/icon.css">
 	<link rel="stylesheet" type="text/css" href="../easyui/css/demo.css">
