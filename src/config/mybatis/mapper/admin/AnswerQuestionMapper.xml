@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cll.test.dao.admin.AnswerQuestionDao">
+	
+	<resultMap id="userQuestion" type="com.cll.test.entity.admin.AnswerQuestion">
+		<id column="aq_id" property="id" />
+		<result column="aq_testId" property="testId" />
+		<result column="aq_studentId" property="studentId" />
+		<result column="aq_testPaperId" property="testPaperId" />
+		<result column="aq_questionId" property="questionId" />
+		<result column="aq_answer" property="answer" />
+		<result column="aq_isCorrect" property="isCorrect" />
+		<association property="question" javaType="com.cll.test.entity.admin.Question">
+			<id column="q_id" property="id" />
+			<result column="q_questionType" property="questionType" />
+			<result column="q_title" property="title" />
+			<result column="q_score" property="score" />
+			<result column="q_optionA" property="optionA" />
+			<result column="q_optionB" property="optionB" />
+			<result column="q_optionC" property="optionC" />
+			<result column="q_optionD" property="optionD" />
+			<result column="q_rightanswer" property="rightanswer" />
+		</association>
+	</resultMap>
+	
+	<!-- 试卷答题插入操作 -->
+	<insert id="add" parameterType="com.cll.test.entity.admin.AnswerQuestion">
+		insert into answerQuestion(id,testPaperId,testId,studentId,questionId,answer,isCorrect) values(null,#{testPaperId},#{testId},#{studentId},#{questionId},#{answer},#{isCorrect})
+	</insert>
+	<!-- 试卷答题更新操作 -->
+	<update id="edit" parameterType="com.cll.test.entity.admin.AnswerQuestion">
+		update answerQuestion set testPaperId = #{testPaperId},studentId = #{studentId} where id = #{id}
+	</update>
+	<!-- 提交答案操作 -->
+	<update id="submitAnswer" parameterType="com.cll.test.entity.admin.AnswerQuestion">
+		update answerQuestion set answer = #{answer},isCorrect = #{isCorrect} where id = #{id}
+	</update>
+	<!-- 试卷答题信息搜索查询 -->
+	<select id="findList" parameterType="Map" resultType="com.cll.test.entity.admin.AnswerQuestion">
+		select * from answerQuestion where 1 = 1  
+		<if test="testId != null">
+			and testId = #{testId} 
+		</if>
+		<if test="studentId != null">
+			and studentId = #{studentId}  
+		</if>
+		<if test="questionId != null">
+			and questionId = #{questionId}  
+		</if>
+		<if test="offset != null and pageSize != null">
+			limit #{offset},#{pageSize}
+		</if>
+	</select>
+	<!-- 根据某个学生查询试卷答题信息 -->
+	<select id="findListByUser" parameterType="Map" resultMap="userQuestion">
+		select 
+			aq.id as aq_id,aq.studentId as aq_studentId,aq.testId as aq_testId,aq.testPaperId as aq_testPaperId,aq.questionId as aq_questionId,aq.answer as aq_answer,aq.isCorrect as aq_isCorrect,
+			q.id as q_id,q.questionType as q_questionType,q.title as q_title,q.score as q_score,q.optionA as q_optionA,q.optionB as q_optionb,q.optionC as q_optionC,q.optionD as q_optionD,q.rightanswer as q_rightanswer
+		from answerQuestion aq,question q where aq.questionId = q.id and aq.testId = #{testId} and aq.studentId = #{studentId} and aq.testPaperId = #{testPaperId}
+	</select>
+	<!-- 模糊搜索总条数 -->
+	<select id="getTotal" parameterType="Map" resultType="Integer">
+		select count(*) from answerQuestion where 1 = 1  
+		<if test="testId != null">
+			and testId = #{testId} 
+		</if>
+		<if test="studentId != null">
+			and studentId = #{studentId}  
+		</if>
+		<if test="questionId != null">
+			and questionId = #{questionId}  
+		</if>
+	</select>
+	<!-- 删除试卷答题信息 -->
+	<delete id="delete" parameterType="Long">
+		delete from answerQuestion where id =${value}
+	</delete>
+</mapper>
